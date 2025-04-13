@@ -1,0 +1,19 @@
+.content-1 {
+  margin-left: 15%;
+  margin-right: 15%;
+  margin-top: 50px;
+}
+
+.main-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  margin-top: 20px;
+}
+.first-row {
+  text-align: center;
+}
+.img-fluid {
+  align-items: center;
+}

@@ -1,0 +1,15 @@
+.container-fuild {
+  width: 100%;
+}
+.nav-link {
+  color: black;
+  border-radius: 5px;
+  margin-left: 5px;
+}
+.nav-link:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px black;
+}
+.nav-link.active {
+  box-shadow: 0 0 10px black;
+}
