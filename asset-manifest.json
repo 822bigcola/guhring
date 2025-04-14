@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/guhring/static/css/main.2eaf5ee2.css",
-    "main.js": "/guhring/static/js/main.47e1ef9f.js",
+    "main.js": "/guhring/static/js/main.b5311c68.js",
     "static/js/453.f8a2ba37.chunk.js": "/guhring/static/js/453.f8a2ba37.chunk.js",
     "static/media/gio-to.png": "/guhring/static/media/gio-to.49b2a5872136187790e2.png",
     "static/media/Thong bao thue_page-0001.jpg": "/guhring/static/media/Thong bao thue_page-0001.275f84d6b330ca6f9bcf.jpg",
@@ -14,11 +14,11 @@
     "static/media/logoGuhring.jpg": "/guhring/static/media/logoGuhring.e48c23b8f48207e80291.jpg",
     "index.html": "/guhring/index.html",
     "main.2eaf5ee2.css.map": "/guhring/static/css/main.2eaf5ee2.css.map",
-    "main.47e1ef9f.js.map": "/guhring/static/js/main.47e1ef9f.js.map",
+    "main.b5311c68.js.map": "/guhring/static/js/main.b5311c68.js.map",
     "453.f8a2ba37.chunk.js.map": "/guhring/static/js/453.f8a2ba37.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2eaf5ee2.css",
-    "static/js/main.47e1ef9f.js"
+    "static/js/main.b5311c68.js"
   ]
 }
