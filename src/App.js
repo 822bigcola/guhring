@@ -1,12 +1,14 @@
 import "./App.css";
 
-import Mainpage from "./pages/mainpage";
-
+import Mainpage from "./pages/mainpage.js";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
-    <div>
+    <>
       <Mainpage />
-    </div>
+      <ToastContainer position="top-right" autoClose={3000} />
+    </>
   );
 }
 

@@ -1,27 +1,74 @@
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px black;
+/* Container chỉnh khoảng cách */
+.body-content {
+  margin-top: 80px;
+  padding: 0 20px;
 }
 
-.card:hover::before {
-  opacity: 1;
-  transform: rotate(-45deg) translateY(100%);
-}
+/* Bootstrap row căn giữa các cột */
 .row {
-  justify-content: center;
+  justify-content: start; /* nếu muốn trái - phải đều thì dùng 'center' */
+  row-gap: 20px;
 }
+
+/* Mỗi cột card */
+.col-6 {
+  margin-top: 20px;
+}
+
+/* Thẻ điều hướng không có gạch chân */
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Card hiện đại */
 .card {
   width: 100%;
   height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border: 1px solid #e0e0e0;
 }
-.card-link {
-  text-decoration: none;
-  color: black;
+
+/* Hover mềm mại */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
-.body-content {
-  margin-top: 80px;
-  margin-left: 20px;
+
+/* Ảnh đẹp không méo */
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
 }
-.col-6 {
-  margin-top: 20px;
+
+/* Nội dung card */
+.card-body {
+  padding: 12px 16px;
+}
+
+/* Tiêu đề */
+.card-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Nội dung mô tả */
+.card-text {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.4;
+  height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

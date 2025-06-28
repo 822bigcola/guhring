@@ -1,59 +1,111 @@
-import react from "react";
+import React from "react";
 import "./navbarGuhring.css";
 import { NavLink } from "react-router-dom";
-//import { IoMdAddCircleOutline } from "react-icons/io";
 
-class navbarGuhring extends react.Component {
+class NavbarGuhring extends React.Component {
+  handleNavClick = () => {
+    const navbar = document.querySelector(".navbar-collapse");
+    if (navbar?.classList.contains("show")) {
+      navbar.classList.remove("show");
+    }
+  };
+
   render() {
+    const username = this.props.username || sessionStorage.getItem("username");
+
     return (
-      <div
-        className="container-fuild"
-        style={{ position: "fixed", with: "100%", top: "0", zIndex: "1" }}
-      >
-        <nav className="navbar navbar-expand-lg bg-body-tertiary">
-          <NavLink to="/">
+      <div className="container-fluid fixed-top bg-white shadow-sm">
+        <nav className="navbar navbar-expand-lg navbar-light">
+          <NavLink to="/" className="navbar-brand">
             <img
               src="https://webshop.guehring.de/media/logo/websites/1/2000px-G_hring_Logo.svg.png"
-              width="250px"
-              alt="Guhring VN"
+              alt="Guhring"
+              style={{ height: "50px", width: "200px", objectFit: "contain" }}
             />
           </NavLink>
+
           <button
             className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarNav"
-            aria-controls="navbarNavAltMarkup"
+            aria-controls="navbarNav"
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <span className="navbar-toggler-icon"></span>
+            <span className="navbar-toggler-icon" />
           </button>
-          <div
-            className="collapse navbar-collapse"
-            id="navbarNav"
-            style={{ marginLeft: "30px" }}
-          >
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <NavLink className="nav-link" aria-current="page" to="/product">
-                  Product
-                </NavLink>
+
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav ms-3">
+              {["product", "sales", "accountant", "hr"].map((route) => (
+                <li className="nav-item" key={route}>
+                  <NavLink
+                    className="nav-link"
+                    to={`/${route}`}
+                    onClick={this.handleNavClick}
+                  >
+                    {route.charAt(0).toUpperCase() + route.slice(1)}
+                  </NavLink>
+                </li>
+              ))}
+              <li className="nav-item dropdown">
+                <button
+                  className="nav-link dropdown-toggle"
+                  id="settingDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  style={{ background: "none", border: "none" }}
+                >
+                  ⚙️ Setting
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="settingDropdown">
+                  <li>
+                    <NavLink
+                      className="dropdown-item"
+                      to="/searchArticle"
+                      onClick={this.handleNavClick}
+                    >
+                      🔍 Search Article
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink
+                      className="nav-link"
+                      to="/addnews"
+                      onClick={this.handleNavClick}
+                    >
+                      ➕ Add News
+                    </NavLink>
+                  </li>
+                  {/*thêm nhiều mục khác tại đây */}
+                </ul>
               </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/sales">
-                  Sales
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/accountant">
-                  Accountant
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/hr">
-                  HR
-                </NavLink>
+            </ul>
+            <ul className="navbar-nav ms-auto">
+              <li className="nav-item d-flex align-items-center">
+                {username ? (
+                  <>
+                    <NavLink
+                      className="nav-link"
+                      to="/logout"
+                      onClick={this.handleNavClick}
+                      title="Logout"
+                    >
+                      🚪 Logout
+                    </NavLink>
+                    <span className="ms-1">{username}</span>
+                  </>
+                ) : (
+                  <NavLink
+                    className="nav-link d-flex align-items-center"
+                    to="/login"
+                    onClick={this.handleNavClick}
+                    title="Login"
+                  >
+                    🔐 Login
+                  </NavLink>
+                )}
               </li>
             </ul>
           </div>
@@ -62,4 +114,5 @@ class navbarGuhring extends react.Component {
     );
   }
 }
-export default navbarGuhring;
+
+export default NavbarGuhring;
