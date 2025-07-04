@@ -9,6 +9,7 @@ class LogoutPage extends React.Component {
   }
   componentDidUpdate(prevProps, prevState) {
     if (this.state.redirectToHome && !prevState.redirectToHome) {
+      toast.success("Logout successfully");
       this.props.router.navigate("/");
     }
   }
@@ -17,7 +18,6 @@ class LogoutPage extends React.Component {
     sessionStorage.setItem("username", "");
     sessionStorage.setItem("token", "");
     this.props.updateUsername("");
-    toast.success("Logout successfully");
     this.setState({ redirectToHome: true });
   };
   render() {

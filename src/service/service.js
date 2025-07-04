@@ -24,3 +24,19 @@ export function isTokenExpired(token) {
     return true;
   }
 }
+
+export function checkLogin() {
+  const token = sessionStorage.getItem("token");
+  if (!token || isTokenExpired(token)) {
+    return false;
+  }
+  return true;
+}
+export function formatPriceVND(price) {
+  const number = parseFloat(price);
+  if (isNaN(number)) return price;
+  return number.toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
+}

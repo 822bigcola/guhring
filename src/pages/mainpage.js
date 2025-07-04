@@ -1,16 +1,17 @@
 import React from "react";
 
 import NavbarGuhring from "../views/navbarGuhring";
-import FooterGuhring from "../views/footerGuhring";
 import BodyCardGuhring from "../views/bodyCardGuhring";
-//import Addnews from "../pages/addnews";
 import Newspage from "../pages/newspage";
 import { Route, Routes, HashRouter } from "react-router-dom";
 import axios from "axios";
-import AddNewsWrapper from "./AddNewsWrapper";
+//import AddNewsWrapper from "./AddNewsWrapper";
+import Addnews from "./addnews";
 import Loadingpage from "./loading";
 import LoginpageWrapper from "./loginWrapper";
 import LogoutPage from "./logout";
+import ChangePassword from "./changePassword";
+import FeedBack from "./feedback";
 
 import SearchArticle from "./searchArtikel";
 class Mainpage extends React.Component {
@@ -46,11 +47,11 @@ class Mainpage extends React.Component {
                     element={<BodyCardGuhring listcard={this.state.data} />}
                   />
                   <Route
-                    path="/product"
+                    path="/production"
                     element={
                       <BodyCardGuhring
                         listcard={this.state.data.filter((item) =>
-                          item.hashtag.includes("#product")
+                          item.hashtag.includes("#production")
                         )}
                       />
                     }
@@ -86,7 +87,7 @@ class Mainpage extends React.Component {
                     }
                   />
                   {this.state.data.length > 0 && this.renderDynamicRoutes()}
-                  <Route path="/addnews" element={<AddNewsWrapper />} />
+                  <Route path="/addnews" element={<Addnews />} />
                   <Route
                     path="/login"
                     element={
@@ -102,14 +103,14 @@ class Mainpage extends React.Component {
                     }
                   />
                   <Route path="/searchArticle" element={<SearchArticle />} />
+                  <Route path="/change-password" element={<ChangePassword />} />
+                  <Route path="/feedback" element={<FeedBack />} />
                   <Route
                     path="*"
                     element={<div>Không tìm thấy nội dung</div>}
                   />
                 </Routes>
               </div>
-
-              <FooterGuhring />
             </header>
           </div>
         </HashRouter>

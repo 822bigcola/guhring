@@ -1,20 +1,31 @@
 import React from "react";
 
-class footerGuhring extends React.Component {
+class FooterGuhring extends React.Component {
   render() {
     return (
-      <footer>
-        <div className="container">
-          <footer className="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-            <div className="col-md-4 d-flex align-items-center">
-              <span className="mb-3 mb-md-0 text-body-secondary">
-                © 2025 Guhring VietNam
-              </span>
-            </div>
-          </footer>
+      <footer className="bg-dark text-light py-4 mt-5">
+        <div className="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+          <div className="mb-2 mb-md-0">
+            <span>&copy; {new Date().getFullYear()} Guhring Vietnam</span>
+          </div>
+          <div>
+            <a
+              href="https://guhring.com"
+              className="text-light me-3 text-decoration-none"
+            >
+              Website
+            </a>
+            <a
+              href="mailto:phan-trong.hieu@guhring.vn"
+              className="text-light text-decoration-none"
+            >
+              Contact
+            </a>
+          </div>
         </div>
       </footer>
     );
   }
 }
-export default footerGuhring;
+
+export default FooterGuhring;

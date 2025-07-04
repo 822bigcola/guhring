@@ -1,4 +1,115 @@
-.container-content {
+.news-container {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 800px;
+  margin: 2rem auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   margin-top: 100px;
-  margin-left: 20px;
+}
+
+.news-title {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label-1 {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #333;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.preview-image {
+  margin-top: 1rem;
+  max-width: 250px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  display: block;
+}
+
+.hashtag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 0.5rem;
+}
+
+.badge-label {
+  background-color: #6c757d;
+  color: white;
+  padding: 0.4rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.btn-submit {
+  background-color: #28a745;
+  color: white;
+  padding: 0.6rem 1.5rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-submit:hover {
+  background-color: #218838;
+}
+
+/* ===== CUSTOM REACT-QUILL STYLE ===== */
+.custom-editor {
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.custom-editor .ql-toolbar {
+  border-radius: 6px 6px 0 0;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ccc;
+}
+
+.custom-editor .ql-container {
+  min-height: 300px;
+  border-radius: 0 0 6px 6px;
+}
+
+.custom-editor .ql-editor {
+  min-height: 250px;
+  padding: 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.custom-editor .ql-editor img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 10px 0;
+}
+
+@media (max-width: 600px) {
+  .news-container {
+    padding: 1rem;
+  }
+
+  .btn-submit {
+    width: 100%;
+  }
 }

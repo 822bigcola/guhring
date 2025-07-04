@@ -81,40 +81,26 @@ class NewsPage extends React.Component {
       );
     }
 
-    const formattedParagraphs = (news.bodycontent || "")
-      .split(/\n{1,}/)
-      .map((p) => p.trim());
-
     return (
-      <div>
-        <div className="content-1">
-          <br />
-          {news.pathUrl && (
-            <div style={{ textAlign: "center" }}>
-              <img
-                src={news.pathUrl}
-                className="img-fluid"
-                alt={news.title || "Ảnh minh họa"}
-              />
-            </div>
-          )}
-          <hr />
-          <h1 className="main-title">{news.title}</h1>
-          <hr />
-          {formattedParagraphs.map((para, index) => (
-            <p
-              key={index}
-              style={{
-                textAlign: "justify",
-                textIndent: "2em",
-                lineHeight: "1.6",
-                marginBottom: "1em",
-              }}
-            >
-              {para}
-            </p>
-          ))}
-        </div>
+      <div className="content-1">
+        <br />
+        {news.pathUrl && (
+          <div style={{ textAlign: "center" }}>
+            <img
+              src={news.pathUrl}
+              className="img-fluid"
+              alt={news.title || "Ảnh minh họa"}
+            />
+          </div>
+        )}
+        <hr />
+        <h1 className="main-title">{news.title}</h1>
+        <hr />
+
+        <div
+          className="news-html"
+          dangerouslySetInnerHTML={{ __html: news.bodycontent }}
+        />
       </div>
     );
   }

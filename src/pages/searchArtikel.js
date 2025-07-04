@@ -1,73 +1,168 @@
-import react from "react";
+import React from "react";
 import axios from "axios";
 import TableService from "../service/table";
 import { toast } from "react-toastify";
+import withRouter from "./withRouter";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { checkLogin, formatPriceVND } from "../service/service";
+import "./searchAritkel.css";
 
-class SearchArtikel extends react.Component {
+class SearchArtikel extends React.Component {
   state = {
     searchCode: "",
     results: [],
+    page: 1,
+    hasMore: false,
     loading: false,
+    redirectToLogin: false,
+    redirect: false,
+    searchActive: false,
   };
 
-  handleSearch = async (event) => {
-    event.preventDefault();
-    this.setState({ loading: true });
+  componentDidMount() {
+    if (!checkLogin()) {
+      this.setState({ redirectToLogin: true });
+    } else {
+      const role = sessionStorage.getItem("role");
+      if (!["admin", "sales", "accounting"].includes(role)) {
+        this.setState({ redirect: true });
+      }
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { redirectToLogin, redirect } = this.state;
+
+    if (redirectToLogin && !prevState.redirectToLogin) {
+      toast.warning("🔒 Please login to continue");
+      this.props.router.navigate("/login");
+    }
+
+    if (redirect && !prevState.redirect) {
+      toast.warning("🚫 You do not have permission to access this page");
+      this.props.router.navigate(-1);
+    }
+  }
+
+  handleSearch = async (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    this.setState(
+      {
+        results: [],
+        page: 1,
+        hasMore: true,
+        loading: true,
+        searchActive: true,
+      },
+      () => this.fetchMoreData(true)
+    );
+  };
+
+  fetchMoreData = async (isFirstLoad = false) => {
+    const { searchCode, page, results } = this.state;
 
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_URL_API_SERVER}/article`,
-        { params: { code: this.state.searchCode } }
+        {
+          params: {
+            code: searchCode,
+            page: page,
+            limit: 20,
+          },
+        }
       );
-      const formattedResults = response.data.map((item) => [
+
+      const newData = response.data.map((item) => [
         item.Code,
         item.Description,
-        item.PriceDealer,
-        item.PriceEnduser,
+        formatPriceVND(item.PriceDealer),
+        formatPriceVND(item.PriceEnduser),
       ]);
-      this.setState({ results: formattedResults, loading: false });
+
+      if (isFirstLoad && newData.length === 0) {
+        toast.info(`❗ No articles found for code "${searchCode}"`);
+        this.setState({
+          results: [],
+          hasMore: false,
+          loading: false,
+        });
+        return;
+      }
+
+      this.setState({
+        results: [...results, ...newData],
+        page: page + 1,
+        hasMore: newData.length > 0,
+        loading: false,
+      });
     } catch (error) {
-      toast.error("Error fetching search results");
-      this.setState({ loading: false });
+      toast.error("❌ Error fetching search results");
+      this.setState({ hasMore: false, loading: false });
     }
   };
 
   render() {
+    const { searchCode, results, loading, hasMore, searchActive } = this.state;
     const headers = ["Code", "Description", "Price Dealer", "Price Enduser"];
+
     return (
-      <div
-        className="container"
-        style={{ marginTop: "100px", marginLeft: "20px" }}
-      >
-        <form onSubmit={this.handleSearch}>
-          <div className="mb-3">
-            <label className="form-label">Article Code: </label>
+      <div className="artikel-container">
+        <form onSubmit={this.handleSearch} className="artikel-form">
+          <label className="form-label-article">🔍 Article Code</label>
+          <div className="input-group">
             <input
               type="text"
-              value={this.state.searchCode}
+              value={searchCode}
               onChange={(e) => this.setState({ searchCode: e.target.value })}
-              placeholder="Search articles..."
-              style={{ marginLeft: "10px", width: "300px" }}
+              className="form-control search-input"
+              placeholder="Enter article code..."
             />
-            <button
-              type="submit"
-              className="btn btn-primary"
-              style={{ marginLeft: "10px", marginTop: "-5px" }}
-            >
+            <button className="btn search-button" type="submit">
               Search
             </button>
           </div>
         </form>
-        {this.state.loading ? (
-          <p>Loading...</p>
-        ) : this.state.results.length > 0 ? (
-          <TableService headers={headers} data={this.state.results} />
-        ) : (
-          <p>No results found</p>
-        )}
+
+        {loading && results.length === 0 ? (
+          <div className="text-center mt-4">
+            <div className="spinner-border text-warning" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        ) : results.length > 0 ? (
+          <div className="table-scroll-container" id="scrollableDiv">
+            <InfiniteScroll
+              dataLength={results.length}
+              next={this.fetchMoreData}
+              hasMore={hasMore}
+              scrollableTarget="scrollableDiv"
+              loader={
+                <h6 className="text-warning text-center mt-3">
+                  Loading more...
+                </h6>
+              }
+              endMessage={
+                <div className="no-results mt-4">
+                  <span> ✅ All results loaded.</span>
+                </div>
+              }
+            >
+              <TableService headers={headers} data={results} />
+            </InfiniteScroll>
+          </div>
+        ) : searchActive ? (
+          <div className="no-results mt-4">
+            <span>
+              ❗ No article matched with code "<b>{searchCode}</b>"
+            </span>
+          </div>
+        ) : null}
       </div>
     );
   }
 }
 
-export default SearchArtikel;
+export default withRouter(SearchArtikel);

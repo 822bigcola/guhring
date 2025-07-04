@@ -38,7 +38,7 @@ class NavbarGuhring extends React.Component {
 
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-3">
-              {["product", "sales", "accountant", "hr"].map((route) => (
+              {["production", "sales", "accountant", "hr"].map((route) => (
                 <li className="nav-item" key={route}>
                   <NavLink
                     className="nav-link"
@@ -52,14 +52,17 @@ class NavbarGuhring extends React.Component {
               <li className="nav-item dropdown">
                 <button
                   className="nav-link dropdown-toggle"
-                  id="settingDropdown"
+                  id="functionDropdown"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                   style={{ background: "none", border: "none" }}
                 >
-                  ⚙️ Setting
+                  ⚙️ Function
                 </button>
-                <ul className="dropdown-menu" aria-labelledby="settingDropdown">
+                <ul
+                  className="dropdown-menu"
+                  aria-labelledby="functionDropdown"
+                >
                   <li>
                     <NavLink
                       className="dropdown-item"
@@ -83,20 +86,59 @@ class NavbarGuhring extends React.Component {
               </li>
             </ul>
             <ul className="navbar-nav ms-auto">
-              <li className="nav-item d-flex align-items-center">
-                {username ? (
-                  <>
-                    <NavLink
-                      className="nav-link"
-                      to="/logout"
-                      onClick={this.handleNavClick}
-                      title="Logout"
+              {username ? (
+                <>
+                  <li className="nav-item dropdown">
+                    <button
+                      className="nav-link dropdown-toggle"
+                      id="accountDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      style={{ background: "none", border: "none" }}
                     >
-                      🚪 Logout
-                    </NavLink>
-                    <span className="ms-1">{username}</span>
-                  </>
-                ) : (
+                      👤 Account
+                    </button>
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="accountDropdown"
+                    >
+                      <li>
+                        <NavLink
+                          className="dropdown-item"
+                          to="/change-password"
+                          onClick={this.handleNavClick}
+                        >
+                          🔑 Change password
+                        </NavLink>
+                      </li>
+
+                      <li>
+                        <NavLink
+                          className="dropdown-item"
+                          to="/feedback"
+                          onClick={this.handleNavClick}
+                        >
+                          💬 Feedback
+                        </NavLink>
+                      </li>
+
+                      <li>
+                        <NavLink
+                          className="dropdown-item"
+                          to="/logout"
+                          onClick={this.handleNavClick}
+                        >
+                          🔓 Logout
+                        </NavLink>
+                      </li>
+
+                      {/*thêm nhiều mục khác tại đây */}
+                    </ul>
+                  </li>
+                  <span className="nav-link">{username}</span>
+                </>
+              ) : (
+                <li className="nav-item d-flex align-items-center">
                   <NavLink
                     className="nav-link d-flex align-items-center"
                     to="/login"
@@ -105,8 +147,8 @@ class NavbarGuhring extends React.Component {
                   >
                     🔐 Login
                   </NavLink>
-                )}
-              </li>
+                </li>
+              )}
             </ul>
           </div>
         </nav>

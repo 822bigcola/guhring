@@ -1,0 +1,73 @@
+/* feedback.css */
+
+.feedback-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 16px;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+  margin-top: 100px;
+}
+
+.feedback-card {
+  background-color: white;
+  width: 100%;
+  max-width: 700px;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.feedback-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.feedback-quill {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: white;
+  border: 1px solid #ccc;
+  min-height: 300px; /* tăng chiều cao tổng thể */
+}
+
+/* Tăng chiều cao vùng soạn nội dung */
+.feedback-quill .ql-editor {
+  min-height: 300px; /* có thể chỉnh lên 300px nếu muốn cao hơn nữa */
+  font-size: 16px; /* to hơn dễ đọc */
+  line-height: 1.6;
+}
+
+.feedback-submit {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.feedback-submit:hover {
+  background-color: #0056b3;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

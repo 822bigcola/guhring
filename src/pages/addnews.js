@@ -4,38 +4,49 @@ import axios from "axios";
 import { removeVietnameseTones, isTokenExpired } from "../service/service";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Loginpage from "./login";
+import withRouter from "./withRouter";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 class AddNews extends React.Component {
-  state = {
-    title: "",
-    content: "",
-    bodycontent: "",
-    pathUrl: "",
-    preview: null,
-    thumbnail: null,
-    hashtags: [],
-    redirectToLogin: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: "",
+      content: "",
+      bodycontent: "",
+      pathUrl: "",
+      preview: null,
+      thumbnail: null,
+      hashtags: [],
+      redirectToLogin: false,
+      redirect: false,
+    };
+    this.reactQuillRef = null;
+  }
 
   componentDidMount() {
-    this.checkLogin();
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.redirectToLogin && !prevState.redirectToLogin) {
-      this.props.navigate("/login"); // đúng chuẩn: navigate trong lifecycle
+    const token = sessionStorage.getItem("token");
+    if (!token || isTokenExpired(token)) {
+      this.setState({ redirectToLogin: true });
+    } else {
+      const role = sessionStorage.getItem("role");
+      if (!["admin", "hr", "accounting"].includes(role)) {
+        this.setState({ redirect: true });
+      }
     }
   }
 
-  checkLogin = () => {
-    const token = sessionStorage.getItem("token");
-    if (!token || isTokenExpired(token)) {
-      toast.warn("Please login to continue");
-      this.setState({ redirectToLogin: true });
-      return false;
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.redirectToLogin && !prevState.redirectToLogin) {
+      toast.warn("⚠️ Please log in to continue!");
+      this.props.router.navigate("/login");
     }
-    return true;
-  };
+    if (this.state.redirect && !prevState.redirect) {
+      toast.warn("🚫 You do not have permission to access this page!");
+      this.props.router.navigate(-1);
+    }
+  }
 
   getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min;
@@ -44,18 +55,22 @@ class AddNews extends React.Component {
   handleSubmitClick = async (event) => {
     event.preventDefault();
 
-    if (!this.state.title || !this.state.content || !this.state.bodycontent) {
-      toast.warn("⚠️ Vui lòng nhập đầy đủ tiêu đề, nội dung và diễn giải!");
+    const { title, content, bodycontent, thumbnail, hashtags } = this.state;
+
+    if (!title || !content || !bodycontent) {
+      toast.warn(
+        "⚠️ Please fill in all required fields: title, summary, and content!"
+      );
       return;
     }
 
     try {
-      toast.info("Đang gửi dữ liệu...");
+      toast.info("📤 Submitting post...");
       let pathUrl = "";
 
-      if (this.state.thumbnail) {
+      if (thumbnail) {
         const formdata = new FormData();
-        formdata.append("file", this.state.thumbnail);
+        formdata.append("file", thumbnail);
         formdata.append("upload_preset", "ml_default");
 
         const res1 = await axios.post(
@@ -66,18 +81,15 @@ class AddNews extends React.Component {
       }
 
       const tempPath =
-        "/" +
-        removeVietnameseTones(this.state.title)
-          .toLowerCase()
-          .replace(/\s+/g, "-");
+        "/" + removeVietnameseTones(title).toLowerCase().replace(/\s+/g, "-");
 
       const news = {
-        title: this.state.title,
-        content: this.state.content,
-        bodycontent: this.state.bodycontent,
+        title,
+        content,
+        bodycontent,
         path: tempPath,
-        hashtag: this.state.hashtags.join(""), // Ghép chuỗi hashtags
-        pathUrl: pathUrl,
+        hashtag: hashtags.join(""),
+        pathUrl,
         _id: this.getRandomInt(1, 1000),
       };
 
@@ -90,19 +102,19 @@ class AddNews extends React.Component {
         config
       );
 
-      toast.success("Đăng bài thành công!");
-      this.props.navigate("/");
+      toast.success("✅ Post submitted successfully!");
+      this.props.router.navigate("/");
       window.location.reload();
     } catch (error) {
-      console.error("Lỗi upload:", error.response?.data || error.message);
+      console.error("Error:", error.response?.data || error.message);
       toast.dismiss();
-      toast.error("Đăng bài thất bại!");
+      toast.error("❌ Failed to submit the post!");
     }
   };
 
   handleTitle = (e) => this.setState({ title: e.target.value });
   handleContent = (e) => this.setState({ content: e.target.value });
-  handleBodyContent = (e) => this.setState({ bodycontent: e.target.value });
+  handleBodyContent = (e) => this.setState({ bodycontent: e });
 
   handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -130,69 +142,125 @@ class AddNews extends React.Component {
     });
   };
 
+  imageHandler = () => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "ml_default");
+
+      try {
+        const res = await fetch(
+          "https://api.cloudinary.com/v1_1/dmzzpfwgx/image/upload",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+        const data = await res.json();
+        const imageURL = data.secure_url;
+        const editor = this.reactQuillRef.getEditor();
+        const range = editor.getSelection();
+        editor.insertEmbed(range.index, "image", imageURL);
+      } catch (err) {
+        console.error("Image upload failed:", err);
+      }
+    };
+  };
+
   render() {
-    const username = sessionStorage.getItem("username");
-    const token = sessionStorage.getItem("token");
+    const { title, content, bodycontent, preview } = this.state;
 
-    if (username && token && !isTokenExpired(token)) {
-      return (
-        <div className="container-content">
-          <form>
-            <div className="mb-3">
-              <label className="form-label">Tiêu đề</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Nhập tiêu đề"
-                onChange={this.handleTitle}
-              />
-            </div>
+    const modules = {
+      toolbar: {
+        container: [
+          [{ header: [1, 2, 3, false] }],
+          ["bold", "italic", "underline", "strike"],
+          [{ align: [] }],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["link", "image"],
+          ["clean"],
+        ],
+        handlers: {
+          image: this.imageHandler,
+        },
+      },
+    };
 
-            <div className="mb-3">
-              <label className="form-label">Ảnh</label>
-              <input
-                type="file"
-                accept="image/*"
-                className="form-control"
-                onChange={this.handleFileChange}
-              />
-              {this.state.preview && (
-                <img
-                  src={this.state.preview}
-                  alt="preview"
-                  className="mt-4 w-64"
-                />
-              )}
-            </div>
+    return (
+      <div className="news-container">
+        <h4 className="news-title">📝 Create New Post</h4>
+        <form>
+          <div className="form-group">
+            <label className="form-label-1">📌 Title</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter post title"
+              value={title}
+              onChange={this.handleTitle}
+            />
+          </div>
 
-            <div className="mb-3">
-              <label className="form-label">Nội dung chính</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Tóm tắt nội dung chính"
-                onChange={this.handleContent}
-              />
-            </div>
+          <div className="form-group">
+            <label className="form-label-1">🖼️ Thumbnail Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              className="form-control"
+              onChange={this.handleFileChange}
+            />
+            {preview && (
+              <img src={preview} alt="preview" className="preview-image" />
+            )}
+          </div>
 
-            <div className="mb-3">
-              <label className="form-label">Diễn giải</label>
-              <textarea
-                value={this.state.bodycontent}
-                onChange={this.handleBodyContent}
-                rows={50}
-                className="w-full p-2 border rounded mb-4"
-                placeholder="Nhập nội dung......"
-                style={{ height: "500px", width: "100%" }}
-              />
-            </div>
+          <div className="form-group">
+            <label className="form-label-1">📄 Summary</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter summary"
+              value={content}
+              onChange={this.handleContent}
+            />
+          </div>
 
-            <div
-              className="mb-3 form-check"
-              style={{ display: "flex", gap: "50px" }}
-            >
-              {["accountant", "hr", "product", "sales"].map((item) => (
-                <div className="child-checkbox" key={item}>
+          <div className="form-group">
+            <label className="form-label-1">📝 Full Content</label>
+            <ReactQuill
+              className="custom-editor"
+              ref={(el) => (this.reactQuillRef = el)}
+              value={bodycontent}
+              onChange={this.handleBodyContent}
+              theme="snow"
+              placeholder="Write full content..."
+              modules={modules}
+              formats={[
+                "header",
+                "bold",
+                "italic",
+                "underline",
+                "strike",
+                "align",
+                "list",
+                "bullet",
+                "link",
+                "image",
+              ]}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label-1">🏷️ Hashtags</label>
+            <div className="hashtag-group">
+              {["accountant", "hr", "production", "sales"].map((item) => (
+                <div className="form-check" key={item}>
                   <input
                     type="checkbox"
                     className="form-check-input"
@@ -201,29 +269,29 @@ class AddNews extends React.Component {
                     onChange={this.handleCheckboxChange}
                   />
                   <label
-                    className="form-check-label"
+                    className="form-check-label badge-label"
                     htmlFor={`${item}Checkbox`}
                   >
-                    {item.toUpperCase()}
+                    #{item}
                   </label>
                 </div>
               ))}
             </div>
+          </div>
 
+          <div className="form-group text-right">
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn-submit"
               onClick={this.handleSubmitClick}
             >
-              Submit
+              🚀 Submit Post
             </button>
-          </form>
-        </div>
-      );
-    } else {
-      return <Loginpage />;
-    }
+          </div>
+        </form>
+      </div>
+    );
   }
 }
 
-export default AddNews;
+export default withRouter(AddNews);
