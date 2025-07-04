@@ -6,6 +6,7 @@ import withRouter from "./withRouter";
 import { checkLogin } from "../service/service";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import DOMPurify from "dompurify";
 
 class Feedback extends React.Component {
   state = {
@@ -63,7 +64,9 @@ class Feedback extends React.Component {
           <form onSubmit={this.handleSubmitClick}>
             <ReactQuill
               value={this.state.feedback}
-              onChange={(value) => this.setState({ feedback: value })}
+              onChange={(value) =>
+                this.setState({ feedback: DOMPurify.sanitize(value) })
+              }
               className="feedback-quill"
               placeholder="Enter your feedback here..."
             />

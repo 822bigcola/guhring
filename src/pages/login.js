@@ -6,7 +6,6 @@ import "./login.css";
 class Loginpage extends React.Component {
   state = {
     user: { username: "", password: "" },
-    islogin: true,
     showPassword: false,
   };
 
@@ -19,13 +18,15 @@ class Loginpage extends React.Component {
       );
       this.props.updateUsername(this.state.user.username);
       toast.success("🎉 Login successfully");
+
       sessionStorage.setItem("username", this.state.user.username);
       sessionStorage.setItem("token", res.data.token);
       sessionStorage.setItem("role", res.data.role);
       this.props.navigate(-1);
     } catch (error) {
-      toast.warning("❌ Wrong username or password");
-      console.log(error.message);
+      const message =
+        error.response?.data?.message || "❌ Wrong username or password";
+      toast.warning(message);
     }
   };
 

@@ -62,6 +62,7 @@ class SearchArtikel extends React.Component {
 
   fetchMoreData = async (isFirstLoad = false) => {
     const { searchCode, page, results } = this.state;
+    const token = sessionStorage.getItem("token");
 
     try {
       const response = await axios.get(
@@ -71,6 +72,9 @@ class SearchArtikel extends React.Component {
             code: searchCode,
             page: page,
             limit: 20,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
         }
       );

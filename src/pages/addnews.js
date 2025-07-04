@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import withRouter from "./withRouter";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import DOMPurify from "dompurify";
 
 class AddNews extends React.Component {
   constructor(props) {
@@ -114,7 +115,8 @@ class AddNews extends React.Component {
 
   handleTitle = (e) => this.setState({ title: e.target.value });
   handleContent = (e) => this.setState({ content: e.target.value });
-  handleBodyContent = (e) => this.setState({ bodycontent: e });
+  handleBodyContent = (e) =>
+    this.setState({ bodycontent: DOMPurify.sanitize(e) });
 
   handleFileChange = (e) => {
     const file = e.target.files[0];
