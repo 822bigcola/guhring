@@ -1,21 +1,17 @@
-import react from "react";
+import React from "react";
+import "./loading.css"; // nhớ tạo hoặc gộp vào CSS hiện tại
 
-class Loadingpage extends react.Component {
+class LoadingPage extends React.Component {
   render() {
     return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <div className="text-center">
-          <div
-            className="spinner-border text-primary"
-            role="status"
-            style={{ width: "4rem", height: "4rem" }}
-          >
-            <span className="visually-hidden">Loading...</span>
-          </div>
-          <h4 className="mt-3">Đang tải dữ liệu...</h4>
+      <div className="loading-overlay">
+        <div className="loading-content text-center">
+          <div className="custom-spinner mb-4"></div>
+          <h4 className="fw-bold text-white">Loading data, please wait...</h4>
         </div>
       </div>
     );
   }
 }
-export default Loadingpage;
+
+export default LoadingPage;
