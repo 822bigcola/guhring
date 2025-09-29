@@ -82,6 +82,7 @@ class SearchArtikel extends React.Component {
       const newData = response.data.map((item) => [
         item.Code,
         item.Description,
+        formatPriceVND(item.PriceTM),
         formatPriceVND(item.PriceDealer),
         formatPriceVND(item.PriceEnduser),
       ]);
@@ -110,7 +111,13 @@ class SearchArtikel extends React.Component {
 
   render() {
     const { searchCode, results, loading, hasMore, searchActive } = this.state;
-    const headers = ["Code", "Description", "Price Dealer", "Price Enduser"];
+    const headers = [
+      "Code",
+      "Description",
+      "Price TM",
+      "Price Dealer",
+      "Price Enduser",
+    ];
 
     return (
       <div className="artikel-container">

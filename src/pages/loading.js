@@ -1,5 +1,5 @@
 import React from "react";
-import "./loading.css"; // nhớ tạo hoặc gộp vào CSS hiện tại
+import "./loading.css";
 
 class LoadingPage extends React.Component {
   render() {
