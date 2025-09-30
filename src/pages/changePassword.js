@@ -23,10 +23,10 @@ class ChangePassword extends React.Component {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      toast.success("✅ Password changed successfully");
+      toast.success("Password changed successfully");
       this.setState({ oldPassword: "", newPassword: "" });
     } catch (error) {
-      toast.error("❌ Failed to change password");
+      toast.error("Failed to change password");
       console.error(error.response?.data || error.message);
     }
   };
